@@ -35,4 +35,8 @@ assert right_id == not_x_and_y_id # shouldl pass
 expected_decendant_ids = [x_variable_id, y_variable_id, not_x_variable_id, not_y_variable_id, x_and_not_y_id, not_x_and_y_id]
 assert all(i in expected_decendant_ids for i in db.get_decendant_ids(x_xor_y_id)) # should pass
 assert len(expected_decendant_ids) == len(db.get_decendant_ids(x_xor_y_id)) # should pass
+
+expected_decendant_ids = [not_x_variable_id, not_y_variable_id, x_and_not_y_id, not_x_and_y_id]
+assert all(i in expected_decendant_ids for i in db.get_decendant_ids(x_xor_y_id, above_depth=2)) # should pass
+assert len(expected_decendant_ids) == len(db.get_decendant_ids(x_xor_y_id, above_depth=2)) # should pass
 ```
