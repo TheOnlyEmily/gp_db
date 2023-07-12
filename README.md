@@ -23,7 +23,7 @@ not_x_and_y_id: int = db.combine_semantics(function=and_function_id, arguments=[
 x_xor_y_id: int = db.combine_semantics(function=or_function_id, arguments=[x_and_not_y_id, not_x_and_y_id])
 
 print(db.get_semantics(x_xor_y_id)) # should print [0, 1, 1, 0]
-print(db.get_function_composition(x_xor_y_id)) # should print [or, [and, x, [not y]], [and, [not, x], y]]
+print(db.get_function_composition(x_xor_y_id, human_readable=True)) # should print [or, [and, x, [not y]], [and, [not, x], y]]
 
 my_xor_function = db.compile_function(x_xor_y_id) 
 print([my_xor_function(x=i, y=j) for i in [0, 1] for j in [0, 1]]) # should print [0, 1, 1, 0]
