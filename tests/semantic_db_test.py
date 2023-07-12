@@ -1,0 +1,1 @@
+from gp_db.database import SemanticDB
