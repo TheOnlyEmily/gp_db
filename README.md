@@ -5,22 +5,22 @@ Build a database for facilitating semantically driven genetic programming.
 ```python
 from gp_db.database import SemanticTrackerDB
 
-db = SemanticTrackerDB()
+db = SemanticTrackerDB(semantics_length=4)
 
-x_variable_id: int = db.add_variable(name='x', value=[0, 1, 0, 1])
-y_variable_id: int = db.add_variable(name='y', value=[0, 0, 1, 1])
+x_variable_id: int = db.add_variable(name='x', value=[0, 1, 0, 1], type=int)
+y_variable_id: int = db.add_variable(name='y', value=[0, 0, 1, 1], type=int)
 
-not_function_id: int = db.add_function(name="not", function=lambda v: int(not v), arg_types=[int], output_type=int)
-and_function_id: int = db.add_function(name="and", function=lambda a, b: int(a and b), arg_types=[int, int], output_type=int)
-or_function_id: int = db.add_function(name="or", function=lambda a, b: int(a or b), arg_types=[int, int], output_type=int)
+db.add_function(name="not", function=lambda v: int(not v), arg_types=[int], output_type=int)
+db.add_function(name="and", function=lambda a, b: int(a and b), arg_types=[int, int], output_type=int)
+db.add_function(name="or", function=lambda a, b: int(a or b), arg_types=[int, int], output_type=int)
 
-not_x_variable_id: int = db.combine_semantics(function=not_function_id, arguments=[x_variable_id])
-not_y_variable_id: int = db.combine_semantics(function=not_function_id, arguments=[y_variable_id])
+not_x_variable_id: int = db.combine_semantics(function="not", arguments=[x_variable_id])
+not_y_variable_id: int = db.combine_semantics(function="not", arguments=[y_variable_id])
 
-x_and_not_y_id: int = db.combine_semantics(function=and_function_id, arguments=[x_variable_id, not_y_variable_id])
-not_x_and_y_id: int = db.combine_semantics(function=and_function_id, arguments=[not_x_variable_id, y_variable_id])
+x_and_not_y_id: int = db.combine_semantics(function="and", arguments=[x_variable_id, not_y_variable_id])
+not_x_and_y_id: int = db.combine_semantics(function="and", arguments=[not_x_variable_id, y_variable_id])
 
-x_xor_y_id: int = db.combine_semantics(function=or_function_id, arguments=[x_and_not_y_id, not_x_and_y_id])
+x_xor_y_id: int = db.combine_semantics(function="or", arguments=[x_and_not_y_id, not_x_and_y_id])
 
 print(db.get_semantics(x_xor_y_id)) # should print [0, 1, 1, 0]
 
