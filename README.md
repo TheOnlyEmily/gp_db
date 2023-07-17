@@ -3,9 +3,9 @@ Build a database for facilitating semantically driven genetic programming.
 
 # Example Code
 ```python
-from gp_db.database import SemanticDB
+from gp_db.database import SemanticTrackerDB
 
-db = SemanticDB()
+db = SemanticTrackerDB()
 
 x_variable_id: int = db.add_variable(name='x', value=[0, 1, 0, 1])
 y_variable_id: int = db.add_variable(name='y', value=[0, 0, 1, 1])

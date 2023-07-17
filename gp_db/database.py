@@ -1,2 +1,2 @@
-class SemanticDB:
+class SemanticTrackerDB:
     ...
