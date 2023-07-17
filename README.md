@@ -27,4 +27,12 @@ print(db.get_semantics(x_xor_y_id)) # should print [0, 1, 1, 0]
 left_id, right_id = db.get_first_decendant_ids(x_xor_y_id)
 assert left_id == x_and_not_y_id # should pass
 assert right_id == not_x_and_y_id # should pass
+
+print(db.get_height(x_variable_id)) # should print 0
+
+print(db.get_height(not_x_variable_id)) # should print 1
+
+print(db.get_height(x_and_not_y_id)) # should print 2
+
+print(db.get_height(x_xor_y_id)) # should print 3
 ```
