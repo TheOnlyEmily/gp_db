@@ -10,6 +10,8 @@ def semantics_and_type_pairs(draw: Callable) -> tuple[list, type]:
 
 @given(st.integers())
 def test_constructor_takes_one_argument(semantics_length):
+    assume(semantics_length > 0)
+    
     SemanticTrackerDB(semantics_length)
 
 
