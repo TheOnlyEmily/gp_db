@@ -1,6 +1,7 @@
+import pytest
 from typing import Callable
 from hypothesis import given, strategies as st, assume
-from gp_db.database import SemanticTrackerDB
+from gp_db.database import SemanticTrackerDB, SemanticEntryError, SemanticDbInitError
 
 @st.composite
 def semantics_info(draw: Callable) -> tuple[list, type]:
@@ -9,11 +10,24 @@ def semantics_info(draw: Callable) -> tuple[list, type]:
     variable_name = draw(st.text())
     return semantics_list, semantics_type, variable_name
 
-@given(st.integers())
-def test_constructor_takes_one_argument(semantics_length):
-    assume(semantics_length > 0)
-    
-    SemanticTrackerDB(semantics_length)
+class TestInitMethod:
+    @given(st.integers())
+    def test_constructor_takes_one_integer(self, semantics_length):
+        assume(semantics_length > 0)
+        
+        SemanticTrackerDB(semantics_length)
+
+    @given(st.integers())
+    def test_constructor_raises_semantic_db_init_error_given_semantics_length_less_than_one(self, semantics_length):
+        assume(semantics_length <= 0)
+
+        with pytest.raises(SemanticDbInitError, match="semantics length must be postive and non-zero"): 
+            SemanticTrackerDB(semantics_length)
+
+    @given(st.one_of(st.booleans(), st.text(), st.floats()))
+    def test_constructor_raises_semantic_db_init_error_given_semantics_length_not_of_type_int(self, semantics_length):
+        with pytest.raises(SemanticDbInitError, match="semantics length must be of type int"): 
+            SemanticTrackerDB(semantics_length)
 
 
 class TestAddVariableMethod:
@@ -32,6 +46,24 @@ class TestAddVariableMethod:
         assume(len(semantic_list) > 0)
         db = SemanticTrackerDB(semantics_length=1)
         db.add_variable(variable_name, semantic_list, semantic_type)
+
+    @given(semantics_info())
+    def test_add_variable_raises_semantic_entry_error_given_empty_string(self, semantics_info):
+        semantic_list, semantic_type, _ = semantics_info
+        variable_name = ''
+        assume(len(semantic_list) > 0)
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(SemanticEntryError, match="empty string is not a valid name"):
+            db.add_variable(variable_name, semantic_list, semantic_type)
+
+    @given(semantics_info())
+    def test_add_variable_raises_semantic_entry_error_given_empty_list(self, semantics_info):
+        _, semantic_type, variable_name = semantics_info
+        assume(len(variable_name) > 0)
+        semantic_list = []
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(SemanticEntryError, match="semantics cannot be an empty list"):
+            db.add_variable(variable_name, semantic_list, semantic_type)
 
     @given(semantics_info())
     def test_add_variable_returns_an_integer(self, semantics_info):
