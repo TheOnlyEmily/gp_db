@@ -7,12 +7,12 @@ from gp_db.database import SemanticTrackerDB
 
 db = SemanticTrackerDB(semantics_length=4)
 
-x_variable_id: int = db.add_variable(name='x', value=[0, 1, 0, 1], type=int)
-y_variable_id: int = db.add_variable(name='y', value=[0, 0, 1, 1], type=int)
+x_variable_id: int = db.add_variable(name='x', value=[0, 1, 0, 1])
+y_variable_id: int = db.add_variable(name='y', value=[0, 0, 1, 1])
 
-db.add_function(name="not", function=lambda v: int(not v), arg_types=[int], output_type=int)
-db.add_function(name="and", function=lambda a, b: int(a and b), arg_types=[int, int], output_type=int)
-db.add_function(name="or", function=lambda a, b: int(a or b), arg_types=[int, int], output_type=int)
+db.add_function(name="not", function=lambda v: int(not v))
+db.add_function(name="and", function=lambda a, b: int(a and b))
+db.add_function(name="or", function=lambda a, b: int(a or b))
 
 not_x_variable_id: int = db.combine_semantics(function="not", arguments=[x_variable_id])
 not_y_variable_id: int = db.combine_semantics(function="not", arguments=[y_variable_id])
