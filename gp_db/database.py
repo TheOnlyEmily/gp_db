@@ -1,3 +1,6 @@
+from typing import Callable
+
+
 class SemanticTrackerDB:
     def __init__(self, semantics_length: int) -> None:
         if type(semantics_length) is not int:
@@ -7,7 +10,7 @@ class SemanticTrackerDB:
         self._next_id: int = 0
         self._semantics_length = semantics_length
 
-    def add_variable(self, name: str, semantics: list, semantics_type: type) -> int:
+    def add_variable(self, name: str, semantics: list) -> int:
         if name == '':
             raise SemanticEntryError("empty string is not a valid name")
         if len(semantics) != self._semantics_length:
@@ -15,6 +18,9 @@ class SemanticTrackerDB:
         semantics_id = self._next_id
         self._next_id += 1
         return semantics_id
+
+    def add_function(self, name: str, function: Callable) -> int:
+        ...
 
 
 class SemanticEntryError(Exception): ...

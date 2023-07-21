@@ -11,7 +11,7 @@ def semantics_info(draw: Callable, semantics_length=None) -> tuple[list, type]:
     else:
         semantics_list = draw(st.lists(st.from_type(semantics_type), min_size=1))
     variable_name = draw(st.text())
-    return semantics_list, semantics_type, variable_name
+    return semantics_list, variable_name
 
 class TestInitMethod:
     @given(st.integers())
@@ -44,45 +44,63 @@ class TestAddVariableMethod:
 
     @given(semantics_info(semantics_length=1))
     def test_add_variable_takes_a_string_and_a_list(self, semantics_info):
-        semantic_list, semantic_type, variable_name = semantics_info
+        semantic_list, variable_name = semantics_info
         assume(len(variable_name) > 0)
         db = SemanticTrackerDB(semantics_length=1)
-        db.add_variable(variable_name, semantic_list, semantic_type)
+        db.add_variable(variable_name, semantic_list)
 
     @given(semantics_info(semantics_length=1))
     def test_add_variable_raises_semantic_entry_error_given_empty_string(self, semantics_info):
-        semantic_list, semantic_type, _ = semantics_info
+        semantic_list, _ = semantics_info
         variable_name = ''
         db = SemanticTrackerDB(semantics_length=1)
         with pytest.raises(SemanticEntryError, match="empty string is not a valid name"):
-            db.add_variable(variable_name, semantic_list, semantic_type)
+            db.add_variable(variable_name, semantic_list)
 
     @given(semantics_info(), st.integers(min_value=1))
     def test_add_variable_raises_semantic_entry_error_given_list_of_wrong_size(self, semantics_info, expected_length):
-        semantic_list, semantic_type, variable_name = semantics_info
+        semantic_list, variable_name = semantics_info
         assume(len(variable_name) > 0)
         assume(len(semantic_list) != expected_length)
         db = SemanticTrackerDB(semantics_length=expected_length)
         with pytest.raises(SemanticEntryError, match=f"expected semantics of length {expected_length} not {len(semantic_list)}"):
-            db.add_variable(variable_name, semantic_list, semantic_type)
+            db.add_variable(variable_name, semantic_list)
 
     @given(semantics_info(semantics_length=1))
     def test_add_variable_returns_an_integer(self, semantics_info):
-        semantic_list, semantic_type, variable_name = semantics_info
+        semantic_list, variable_name = semantics_info
         assume(len(variable_name) > 0)
         db = SemanticTrackerDB(semantics_length=1)
-        semantics_id = db.add_variable(variable_name, semantic_list, semantic_type)
+        semantics_id = db.add_variable(variable_name, semantic_list)
         assert isinstance(semantics_id, int)
 
     @given(semantics_info(semantics_length=1), semantics_info(semantics_length=1))
     def test_add_variable_returns_a_different_integer_for_each_call(self, semantics_info1, semantics_info2):
-        semantic_list1, semantic_type1, variable_name1 = semantics_info1
-        semantic_list2, semantic_type2, variable_name2 = semantics_info2
+        semantic_list1, variable_name1 = semantics_info1
+        semantic_list2, variable_name2 = semantics_info2
         assume(len(variable_name1) > 0)
         assume(len(variable_name2) > 0)
         assume(semantic_list1 != semantic_list2)
         assume(variable_name1 != variable_name2)
         db = SemanticTrackerDB(semantics_length=1)
-        semantics_id1 = db.add_variable(variable_name1, semantic_list1, semantic_type1)
-        semantics_id2 = db.add_variable(variable_name2, semantic_list2, semantic_type2)
+        semantics_id1 = db.add_variable(variable_name1, semantic_list1)
+        semantics_id2 = db.add_variable(variable_name2, semantic_list2)
         assert semantics_id1 != semantics_id2
+
+
+class TestAddFunctionMethod:
+
+    def test_add_function_is_attribute(self):
+        db = SemanticTrackerDB(semantics_length=1)
+        assert hasattr(db, "add_function")
+
+    def test_add_function_is_callable(self):
+        db = SemanticTrackerDB(semantics_length=1)
+        assert callable(db.add_function)
+
+    @given(
+        func_name=st.text(min_size=1),
+        func=st.functions())
+    def test_add_function_takes_a_string_and_function(self, func_name, func):
+        db = SemanticTrackerDB(semantics_length=1)
+        db.add_function(func_name, func)
