@@ -10,9 +10,7 @@ class SemanticTrackerDB:
         self._next_id: int = 0
         self._semantics_length = semantics_length
 
-    def add_variable(self, name: str, semantics: list) -> int:
-        if name == '':
-            raise SemanticEntryError("empty string is not a valid name")
+    def add_variable(self, semantics: list) -> int:
         if len(semantics) != self._semantics_length:
             raise SemanticEntryError(f"expected semantics of length {self._semantics_length} not {len(semantics)}")
         semantics_id = self._next_id
