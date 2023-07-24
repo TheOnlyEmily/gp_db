@@ -7,8 +7,8 @@ from gp_db.database import SemanticTrackerDB
 
 db = SemanticTrackerDB(semantics_length=4)
 
-x_variable_id: int = db.add_variable(name='x', value=[0, 1, 0, 1])
-y_variable_id: int = db.add_variable(name='y', value=[0, 0, 1, 1])
+x_variable_id: int = db.add_variable(value=[0, 1, 0, 1])
+y_variable_id: int = db.add_variable(value=[0, 0, 1, 1])
 
 db.add_function(name="not", function=lambda v: int(not v))
 db.add_function(name="and", function=lambda a, b: int(a and b))
