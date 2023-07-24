@@ -20,7 +20,10 @@ class SemanticTrackerDB:
         return semantics_id
 
     def add_function(self, name: str, function: Callable) -> int:
-        ...
+        if name == '':
+            raise SemanticEntryError("empty string is not a valid name")
+        if not callable(function):
+            raise SemanticEntryError("function must be callable")
 
 
 class SemanticEntryError(Exception): ...

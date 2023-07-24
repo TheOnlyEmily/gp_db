@@ -104,3 +104,21 @@ class TestAddFunctionMethod:
     def test_add_function_takes_a_string_and_function(self, func_name, func):
         db = SemanticTrackerDB(semantics_length=1)
         db.add_function(func_name, func)
+    
+    @given(func_name=st.text(min_size=1), func=st.functions())
+    def test_add_function_returns_none(self, func_name, func):
+        db = SemanticTrackerDB(semantics_length=1)
+        assert db.add_function(func_name, func) is None
+
+    @given(func=st.functions())
+    def test_add_function_raises_semantic_entry_error_given_empty_string(self, func):
+        func_name = ''
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(SemanticEntryError, match="empty string is not a valid name"):
+            db.add_function(func_name, func)
+
+    @given(func_name=st.text(min_size=1), func=st.one_of(st.booleans(), st.text(), st.floats()))
+    def test_add_function_raises_semantic_entry_error_given_function_not_of_type_function(self, func_name, func):
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(SemanticEntryError, match="function must be callable"):
+            db.add_function(func_name, func)
