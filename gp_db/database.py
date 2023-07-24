@@ -19,3 +19,6 @@ class SemanticTrackerDB:
         assert type(name) is str, "name must be of type string"
         assert name is not '', "empty string is not a valid name"
         assert callable(function), "function must be callable"
+
+    def combine_semantics(self, func_name: str, semantics_ids: list[int]) -> int:
+        return 0

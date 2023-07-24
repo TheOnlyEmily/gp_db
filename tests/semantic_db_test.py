@@ -112,3 +112,23 @@ class TestAddFunctionMethod:
         db = SemanticTrackerDB(semantics_length=1)
         with pytest.raises(AssertionError, match="function must be callable"):
             db.add_function(func_name, func)
+
+
+class TestCombineSemanticsMethod:
+
+    def test_has_attribute_combine_semantics(self):
+        assert hasattr(SemanticTrackerDB, "combine_semantics")
+
+    def test_combine_semantics_is_callable(self):
+        assert callable(SemanticTrackerDB.combine_semantics)
+
+    @given(st.text(min_size=1), st.lists(st.integers(min_value=0), min_size=1))
+    def test_combine_semantics_takes_a_string_and_list_of_ints_as_arguments(self, func_name, semantics_ids):
+        db = SemanticTrackerDB(semantics_length=1)
+        db.combine_semantics(func_name, semantics_ids)
+
+    @given(st.text(min_size=1), st.lists(st.integers(min_value=0), min_size=1))
+    def test_combine_semantics_returns_an_integer(self, func_name, semantics_ids):
+        db = SemanticTrackerDB(semantics_length=1)
+        semantics_id: int = db.combine_semantics(func_name, semantics_ids)
+        assert type(semantics_id) is int
