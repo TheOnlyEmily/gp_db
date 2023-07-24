@@ -46,6 +46,12 @@ class TestAddVariableMethod:
         db = SemanticTrackerDB(semantics_length=1)
         db.add_variable(semantic_list)
 
+    @given(semantic_list=st.one_of(st.booleans(), st.text(), st.floats()))
+    def test_add_variable_raises_semantic_entry_error_given_semantics_not_of_type_list(self, semantic_list):
+        with pytest.raises(SemanticEntryError, match="semantics must be of type list"):
+            db = SemanticTrackerDB(semantics_length=1)
+            db.add_variable(semantic_list)
+
     @given(semantics_info(), st.integers(min_value=1))
     def test_add_variable_raises_semantic_entry_error_given_list_of_wrong_size(self, semantic_list, expected_length):
         assume(len(semantic_list) != expected_length)
@@ -94,6 +100,12 @@ class TestAddFunctionMethod:
         db = SemanticTrackerDB(semantics_length=1)
         with pytest.raises(SemanticEntryError, match="empty string is not a valid name"):
             db.add_function(func_name, func)
+
+    @given(function_name=st.one_of(st.booleans(), st.floats()), func=st.functions())
+    def test_add_function_raises_semantic_entry_error_given_function_name_not_of_type_string(self, function_name, func):
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(SemanticEntryError, match="function name must be of type string"):
+            db.add_function(function_name, func)
 
     @given(func_name=st.text(min_size=1), func=st.one_of(st.booleans(), st.text(), st.floats()))
     def test_add_function_raises_semantic_entry_error_given_function_not_of_type_function(self, func_name, func):

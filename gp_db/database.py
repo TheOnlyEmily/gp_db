@@ -11,6 +11,8 @@ class SemanticTrackerDB:
         self._semantics_length = semantics_length
 
     def add_variable(self, semantics: list) -> int:
+        if not isinstance(semantics, list):
+            raise SemanticEntryError("semantics must be of type list")
         if len(semantics) != self._semantics_length:
             raise SemanticEntryError(f"expected semantics of length {self._semantics_length} not {len(semantics)}")
         semantics_id = self._next_id
@@ -18,6 +20,8 @@ class SemanticTrackerDB:
         return semantics_id
 
     def add_function(self, name: str, function: Callable) -> int:
+        if not isinstance(name, str):
+            raise SemanticEntryError("function name must be of type string")
         if name == '':
             raise SemanticEntryError("empty string is not a valid name")
         if not callable(function):
