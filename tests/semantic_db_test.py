@@ -78,9 +78,7 @@ class TestAddFunctionMethod:
         db = SemanticTrackerDB(semantics_length=1)
         assert callable(db.add_function)
 
-    @given(
-        func_name=st.text(min_size=1),
-        func=st.functions())
+    @given(func_name=st.text(min_size=1), func=st.functions())
     def test_add_function_takes_a_string_and_function(self, func_name, func):
         db = SemanticTrackerDB(semantics_length=1)
         db.add_function(func_name, func)
