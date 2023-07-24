@@ -132,3 +132,9 @@ class TestCombineSemanticsMethod:
         db = SemanticTrackerDB(semantics_length=1)
         semantics_id: int = db.combine_semantics(func_name, semantics_ids)
         assert type(semantics_id) is int
+
+    @given(st.one_of(st.booleans(), st.floats()), st.lists(st.integers(min_value=0), min_size=1))
+    def test_combine_semantics_raises_assertion_error_when_given_function_name_thats_not_a_string(self, func_name, semantic_ids):
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(AssertionError, match="function name should be of type string"):
+            db.combine_semantics(func_name, semantic_ids)

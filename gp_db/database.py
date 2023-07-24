@@ -21,4 +21,5 @@ class SemanticTrackerDB:
         assert callable(function), "function must be callable"
 
     def combine_semantics(self, func_name: str, semantics_ids: list[int]) -> int:
+        assert type(func_name) is str, "function name should be of type string"
         return 0
