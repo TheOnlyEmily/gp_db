@@ -22,4 +22,5 @@ class SemanticTrackerDB:
 
     def combine_semantics(self, func_name: str, semantics_ids: list[int]) -> int:
         assert type(func_name) is str, "function name should be of type string"
+        assert func_name is not '', "function name should not be empty string"
         return 0

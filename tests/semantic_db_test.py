@@ -138,3 +138,10 @@ class TestCombineSemanticsMethod:
         db = SemanticTrackerDB(semantics_length=1)
         with pytest.raises(AssertionError, match="function name should be of type string"):
             db.combine_semantics(func_name, semantic_ids)
+
+    @given(st.lists(st.integers(min_value=0), min_size=1))
+    def test_combine_semantics_raises_assertion_error_when_given_function_name_thats_an_empty_string(self, semantic_ids):
+        func_name = ''
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(AssertionError, match="function name should not be empty string"):
+            db.combine_semantics(func_name, semantic_ids)
