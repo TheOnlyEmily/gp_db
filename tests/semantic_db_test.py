@@ -151,3 +151,10 @@ class TestCombineSemanticsMethod:
         db = SemanticTrackerDB(semantics_length=1)
         with pytest.raises(AssertionError, match="semantics ids should be of type list"):
             db.combine_semantics(func_name, semantic_ids)
+
+    @given(st.text(min_size=1))
+    def test_combine_semantics_raises_assertion_error_when_given_semantics_ids_is_empty_list(self, func_name):
+        semantics_ids = []
+        db = SemanticTrackerDB(semantics_length=1)
+        with pytest.raises(AssertionError, match="semantics ids should not be an empty list"):
+            db.combine_semantics(func_name, semantics_ids)

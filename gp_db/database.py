@@ -24,4 +24,5 @@ class SemanticTrackerDB:
         assert type(func_name) is str, "function name should be of type string"
         assert func_name is not '', "function name should not be an empty string"
         assert type(semantics_ids) is list, "semantics ids should be of type list"
+        assert len(semantics_ids) > 0, "semantics ids should not be an empty list"
         return 0
