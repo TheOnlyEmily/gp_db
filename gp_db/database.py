@@ -2,7 +2,7 @@ import networkx as nx
 from typing import Callable
 
 
-class SemanticsTrackerDB:
+class SemanticsTracker:
     def __init__(self) -> None:
         self._semantics_tree = nx.DiGraph()
         self._semantics_list: list[int] = []
