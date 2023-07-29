@@ -1,5 +1,4 @@
 import networkx as nx
-import toolz as tz
 from typing import Callable
 
 
