@@ -22,7 +22,7 @@ def test_add_semantics_returns_incrementing_ids(s1, s2):
     st = SemanticsTracker()
     sem_id1 = st.add_semantics(s1)
     sem_id2 = st.add_semantics(s2)
-    assert sem_id1 < sem_id2
+    assert sem_id2 == sem_id1 + 1
 
 @given(semantics())
 def test_get_semantics_retrieves_semantics_given_an_id(semantics):
