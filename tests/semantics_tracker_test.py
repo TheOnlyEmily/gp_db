@@ -1,4 +1,7 @@
-from hypothesis import strategies as st, given
+import numpy as np
+
+from hypothesis import strategies as st, given, assume
+from hypothesis.extra.numpy import arrays, array_shapes
 from gp_db.database import SemanticsTracker
 
 
@@ -29,3 +32,29 @@ def test_get_semantics_retrieves_semantics_given_an_id(semantics):
     st = SemanticsTracker()
     sem_id = st.add_semantics(semantics)
     assert st.get_semantics(sem_id) == semantics
+
+@given(arrays(np.dtype(np.int_), array_shapes(max_dims=1)), arrays(np.dtype(np.int_), array_shapes(max_dims=1)))
+def test_combine_semantics_takes_two_semantics_ids_and_returns_semantic_id(sem1, sem2):
+    st = SemanticsTracker()
+    assume(sem1.size == sem2.size)
+    parent_id1 = st.add_semantics(sem1)
+    parent_id2 = st.add_semantics(sem2)
+    child_id = st.combine_semantics(np.add, [parent_id1, parent_id2])
+    assert type(child_id) is int
+
+@given(arrays(np.dtype(np.int_), array_shapes(max_dims=1)), arrays(np.dtype(np.int_), array_shapes(max_dims=1)))
+def test_combine_semantics_creates_new_semantics_using_from_function(sem1, sem2):
+    st = SemanticsTracker()
+    assume(sem1.size == sem2.size)
+    parent_id1 = st.add_semantics(sem1)
+    parent_id2 = st.add_semantics(sem2)
+    child_id = st.combine_semantics(np.add, [parent_id1, parent_id2])
+    assert np.all(st.get_semantics(child_id) == np.add(sem1, sem2))
+
+@given(st.lists(st.integers(), min_size=1))
+def test_get_ancestor_graph_returns_one_node_for_semantics_added_through_add_semantics_method(sem):
+    st = SemanticsTracker()
+    sem_id = st.add_semantics(sem)
+    ancestor_graph = st.get_ancestor_graph(sem_id)
+    assert len(ancestor_graph) == 1
+    assert sem_id in ancestor_graph

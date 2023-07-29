@@ -1,4 +1,5 @@
 import networkx as nx
+import toolz as tz
 from typing import Callable
 
 
@@ -24,3 +25,8 @@ class SemanticsTracker:
         self._semantics_tree.add_edges_from(ancestor_connections)
 
         return sem_id
+
+    def get_ancestor_graph(self, semantics_id: int) -> nx.DiGraph:
+        filter_nodes: set[int] = nx.ancestors(self._semantics_tree, semantics_id)
+        filter_nodes.add(semantics_id)
+        return self._semantics_tree.subgraph(filter_nodes)
