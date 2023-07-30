@@ -1,7 +1,7 @@
 import numpy as np
 
 from hypothesis import strategies as st, given, assume
-from gp_db.database import SemanticsTracker
+from gp_db.tracker import SemanticsTracker
 
 
 semantics = lambda: st.lists(
