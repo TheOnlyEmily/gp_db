@@ -1,7 +1,6 @@
 import numpy as np
 
 from hypothesis import strategies as st, given, assume
-from hypothesis.extra.numpy import arrays, array_shapes
 from gp_db.database import SemanticsTracker
 
 
