@@ -58,3 +58,16 @@ def test_get_ancestor_graph_returns_one_node_for_semantics_added_through_add_sem
     ancestor_graph = st.get_ancestor_graph(sem_id)
     assert len(ancestor_graph) == 1
     assert sem_id in ancestor_graph
+
+@given(arrays(np.dtype(np.int_), array_shapes(max_dims=1)), arrays(np.dtype(np.int_), array_shapes(max_dims=1)))
+def test_get_ancestor_graph_returns_tree_for_combined_semantics(sem1, sem2):
+    st = SemanticsTracker()
+    assume(sem1.size == sem2.size)
+    parent_id1 = st.add_semantics(sem1)
+    parent_id2 = st.add_semantics(sem2)
+    child_id = st.combine_semantics(np.add, [parent_id1, parent_id2])
+    ancestor_graph = st.get_ancestor_graph(child_id)
+    assert len(ancestor_graph) == 3
+    assert all(sid in ancestor_graph for sid in [child_id, parent_id1, parent_id2])
+    assert all(len(ancestor_graph[pid]) == 1 for pid in [parent_id1, parent_id2])
+    assert all(child_id in ancestor_graph[pid] for pid in [parent_id1, parent_id2])
