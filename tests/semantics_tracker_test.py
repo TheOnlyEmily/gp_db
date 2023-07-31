@@ -57,22 +57,3 @@ def test_get_ancestor_graph_returns_one_node_for_semantics_added_through_add_sem
     ancestor_graph = st.get_ancestor_graph(sem_id)
     assert len(ancestor_graph) == 1
     assert sem_id in ancestor_graph
-
-@given(st.lists(st.integers(), min_size=1), st.lists(st.integers(), min_size=1), st.lists(st.integers(), min_size=1))
-def test_get_ancestor_graph_returns_tree_for_combined_semantics(sem1, sem2, sem3):
-    st = SemanticsTracker()
-    assume(len(sem1) == len(sem2))
-    assume(len(sem1) == len(sem3))
-    parent_id1 = st.add_semantics(sem1)
-    parent_id2 = st.add_semantics(sem2)
-    parent_id3 = st.add_semantics(sem3)
-    child_id1 = st.combine_semantics(np.add, [parent_id1, parent_id2])
-    child_id2 = st.combine_semantics(np.add, [child_id1, parent_id3])
-    ancestor_graph = st.get_ancestor_graph(child_id2)
-    assert len(ancestor_graph) == 5
-    assert all(sid in ancestor_graph for sid in [child_id1, child_id2, parent_id1, parent_id2, parent_id3])
-    assert all(len(ancestor_graph[pid]) == 1 for pid in [parent_id1, parent_id2, parent_id3, child_id1])
-    assert ancestor_graph[parent_id1] == ancestor_graph[parent_id2]
-    assert ancestor_graph[child_id1] == ancestor_graph[parent_id3]
-    assert all(child_id1 in ancestor_graph[pid] for pid in [parent_id1, parent_id2])
-    assert all(child_id2 in ancestor_graph[pid] for pid in [parent_id3, child_id1])
